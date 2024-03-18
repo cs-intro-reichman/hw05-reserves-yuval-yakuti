@@ -1,20 +1,19 @@
-/** 
+/**
  *  Game of Life.
  *  Usage: "java GameOfLife fileName"
  *  The file represents the initial board.
  *  The file format is described in the homework document.
  */
-
-public class GameOfLife {
+ public class GameOfLife {
 
 	public static void main(String[] args) {
 		String fileName = args[0];
 		//// Uncomment the test that you want to execute, and re-compile.
 		//// (Run one test at a time).
-		//// test1(fileName);
-		//// test2(fileName);
-		//// test3(fileName, 3);
-		//// play(fileName);
+		// test1(fileName);
+		//test2(fileName);
+		 //test3(fileName, 3);
+		play(fileName);
 	}
 	
 	// Reads the data file and prints the initial board.
@@ -27,6 +26,13 @@ public class GameOfLife {
 	// the count and cellValue functions.
 	private static void test2(String fileName) {
 		int[][] board = read(fileName);
+		int[][] newBoard = new int[board.length][board.length];
+		for(int i=1; i<board.length-1; i++){
+			for(int j=1; j< board[0].length-1; j++){
+				newBoard[i][j]=cellValue(board, i, j);
+			}
+		}
+		print(newBoard);
 		//// Write here code that tests that the count and cellValue functions
 		//// are working properly, and returning the correct values.
 	}
@@ -59,12 +65,25 @@ public class GameOfLife {
 	// of this frame as representing the infinite number of dead cells that exist in every direction.
 	// This function assumes that the input file contains valid data, and does no input testing.
 	public static int[][] read(String fileName) {
-		In in = new In(fileName); // Constructs an In object for reading the input file
+		In in = new In(fileName); 
+		// Constructs an In object for reading the input file
 		int rows = Integer.parseInt(in.readLine());
 		int cols = Integer.parseInt(in.readLine());
 		int[][] board = new int[rows + 2][cols + 2];
+		int count=0;
+		while (!in.isEmpty()) {
+			count++;
+			String x=in.readLine();
+			if(x.length()>0){
+				for(int i=0;i<x.length();i++){
+					if (x.charAt(i)=='x'){
+						board[count][i+1]=1;
+					}
+				}
+			}
+		}
 		//// Replace the following statement with your code.
-		return null;
+		return board;
 	}
 	
 	// Creates a new board from the given board, using the rules of the game.
@@ -72,7 +91,13 @@ public class GameOfLife {
 	// cell in the new board. Returns the new board.
 	public static int[][] evolve(int[][] board) {
 		//// Replace the following statement with your code.
-		return null;
+		int[][] newBoard=new int[board.length][board.length];
+		for(int i=1; i<board.length-1; i++){
+			for(int j=1; j<board.length-1; j++){
+				newBoard[i][j]=cellValue(board, i, j);
+			}
+		}
+		return newBoard;
 	}
 
 	// Returns the value that cell (i,j) should have in the next generation.
@@ -86,7 +111,16 @@ public class GameOfLife {
 	// Uses the count(board,i,j) function to count the number of alive neighbors.
 	public static int cellValue(int[][] board, int i, int j) {
 		//// Replace the following statement with your code.
-		return 0;
+		if(board[i][j]==1){
+			if(count(board, i, j)<2 || count(board, i, j)>3){
+				return 0;
+			}
+		}else if(board[i][j]==0){
+			if(count(board, i, j)==3){
+				return 1;
+			}
+		}
+		return board[i][j];
 	}
 	
 	// Counts and returns the number of living neighbors of the given cell
@@ -95,12 +129,27 @@ public class GameOfLife {
 	// Assumes that j is at least 1 and at most the number of columns in the board - 1. 
 	public static int count(int[][] board, int i, int j) {
 		//// Replace the following statement with your code.
-		return 0;
+		int count=0;
+		for(int l=i-1;l<=i+1;l++){
+			for(int n=j-1;n<=j+1;n++){
+				if(l==i && n==j){
+
+				}else if(board[l][n]==1){
+					count++;
+				}
+			}
+		}
+		return count;
 	}
 	
 	// Prints the board. Alive and dead cells are printed as 1 and 0, respectively.
     public static void print(int[][] arr) {
-		//// Write your code here.
+		for(int i=1; i<arr.length-1;i++){
+			for(int j=1; j<arr[i].length-1; j++){
+				System.out.printf("%3s", arr[i][j]);
+			}
+			System.out.println();
+		}
 	}
 		
     // Displays the board. Living and dead cells are represented by black and white squares, respectively.
